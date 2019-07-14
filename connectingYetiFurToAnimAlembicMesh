@@ -1,0 +1,40 @@
+#### This is a script to connect the PUBLISH of SURFACE to an ALEMBIC of ANIMATION, it worked for the possum short film ad hopefully will work for you too, we did it this way to make a yeti based pipeline which worked easily.
+#### The script will look for Deformed in the shape nodes and make a group of them. it looks for deformed because any shape node which has been connected to a rig through skinning gets one. iam slightly unsure how this script
+#### will work if you parent constrained geo to the rig rather than  skinning it.
+#### relies on heirachy being the same ( so long as the model and the almbic from the anim file are the same model (in the outliner and such))
+
+
+# gets ALL shape nodes in scene
+surfShapes = cmds.ls(shapes=True)
+alembicGrp =  []
+surfaceGrp = []
+shapeTar = 0
+for alembic in surfShapes:
+      # creates a group with all shapes with deformed in them ( so only alembics.) adds .outmesh to each
+    if "Deformed" in alembic:
+        alembicOut = alembic + ".outMesh"
+        alembicGrp.append(alembicOut)
+        
+
+for surfaces in surfShapes:
+    # creates a group with all shapes with surface, this part gets tricky as ANYTHING from surface will come with this hence i am cleaning out yeti, Yeti and reference (all yeti made shapes)
+    if "yeti" in surfaces:
+        shapeTar = shapeTar + 1
+    elif "Yeti" in surfaces:
+        shapeTar = shapeTar + 1
+    elif "reference" in surfaces:
+        shapeTar = shapeTar + 1
+    elif "surface" in surfaces:
+        surfacesIn = surfaces + ".inMesh"
+        surfaceGrp.append(surfacesIn)
+
+#print alembicGrp
+#print surfaceGrp
+
+connectTarget = 0
+for items in alembicGrp:
+
+    #print alembicGrp[connectTarget] ,surfaceGrp[connectTarget]
+    
+    cmds.connectAttr(alembicGrp[connectTarget], surfaceGrp[connectTarget])
+    connectTarget = connectTarget +1
