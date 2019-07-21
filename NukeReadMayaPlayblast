@@ -1,5 +1,5 @@
-#PythonScript Written to work with in Nuke with the Shotgun Pipeline as a one click button 
-#for Nuke compositors to bring in the Maya playblast associated with shot
+##PythonScript Written to work with in Nuke with the Shotgun Pipeline as a one click button 
+##for Nuke compositors to bring in the Maya playblast associated with shot
 
 # get directory of file
 nukeDirectory = nuke.root().knob('name').value()
