@@ -1,0 +1,56 @@
+def mdsFastBlast(widthArg=1280, heightArg=720):
+    #variables needed for button
+    projectDir = cmds.workspace(query=True, rootDirectory=True)
+    filePath = cmds.file(query=True, sn=True)
+    fileName = filePath.split('/')[-1]
+    sceneName = fileName.split('.')[0]
+    version = sceneName.split('v')[1]
+    ###
+
+    playblastDir = projectDir + "playblasts"
+    playblastFile = projectDir + sceneName + ".mov"
+    numCurrentFiles = []
+
+    # Create a playblasts directory
+    cmds.sysFile(playblastDir, makeDir=True)
+
+    # Create playblast (16:9 locked!)
+    cmds.playblast(filename=sceneName, format="qt",  width=widthArg, height=heightArg, viewer=False, percent=100)
+
+    # Check how many files are in the playblast folder but first remove thumbnails
+    allFilesList = cmds.getFileList(folder=playblastDir)
+
+    # Looks for files with same file version in playblast folder    
+    # Script does not work if it doesnt detect any files to get revion number so that is what the if else statment is for
+    # Two options: IF = if there is no playblast file.   ELSE = there are play blast files. 
+    if str(bool(allFilesList)) == "False":
+       numFiles = "1"
+
+       revisionID = numFiles.zfill(3)
+       # Copy Playblast file and delete original
+       
+
+    else:
+        
+        # Remove Thumbs.db
+        if 'Thumbs.db' in allFilesList: allFilesList.remove('Thumbs.db')
+        
+        # Turns version into playBlastversion to remove counting of revions with 002,003,004 etc 
+        # Outcome example v002
+        playBlastversion = 'v' + version
+
+        # Looks for files with same file VERSION in playblast folder 
+        for item in allFilesList:
+            if playBlastversion in item: 
+                numCurrentFiles.append(item)
+                
+            numFiles = str(len(numCurrentFiles) + 1)
+        
+            revisionID = numFiles.zfill(3)
+
+            # Copy Playblast file and delete original
+            
+
+
+    cmds.sysFile(playblastFile, copy=playblastDir + "/" + sceneName + "_r" + revisionID + ".mov")       
+    cmds.sysFile(playblastFile, delete=True)
