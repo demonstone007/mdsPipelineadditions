@@ -1,0 +1,21 @@
+#PythonScript Written to work with in Nuke with the Shotgun Pipeline as a one click button 
+#for Nuke compositors to bring in the Maya playblast associated with shot
+
+# get directory of file
+nukeDirectory = nuke.root().knob('name').value()
+# spilt directory name to get folder to add maya playblast file to.
+assetFolder = nukeDirectory.split('nuke')[0]
+# combines the split (assetFolder) with the directory to the playblast folder
+MayaPlayblasts = assetFolder + 'maya/playblasts/'
+# get list of files in Maya/playblast
+playBlastfiles = nuke.getFileNameList(MayaPlayblasts)
+# remove the thumbnail file
+playBlastfiles.remove('Thumbs.db')
+# get an Int of number of files in folder -1 to count from 0
+playBlastnum = int(len(playBlastfiles)-1)
+# fetch the lastest file name from the folder list
+latestPlayblast = playBlastfiles[playBlastnum]
+# combine playblast directory with playblast.mov name
+playBlastLoca = MayaPlayblasts + latestPlayblast
+# create the read node with playblast hooked to it
+nuke.createNode("Read", "file {"+playBlastLoca+"}")
